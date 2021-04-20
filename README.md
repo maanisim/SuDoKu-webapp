@@ -4,6 +4,7 @@ Made purely in JS/HTML/CSS/PYTHON with support for internet explorer 11, Firefox
 
 # How to setup
 ```
+git init
 git pull https://github.com/michalani/SuDoKu.git
 python3 -m venv venv
 pip3 install -r requirements.txt
