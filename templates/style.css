@@ -1,0 +1,73 @@
+/*Game.js stylesheet*/
+
+body {
+    background-color: #303030;
+    font-family: 'Gotu', serif;
+
+}
+table{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 2%;
+    border-collapse: collapse;
+    cursor: crosshair;
+}
+td {
+    border: 1px solid #648864;
+    width: 60px;
+    height: 60px;
+    font-size:30px;
+    text-align: center;
+    background-color: #0A69A2;
+}
+td:hover {
+    opacity: 0.8;
+}
+.buttons button {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+    background-color: #C7C2B5;
+  }
+  button{
+    background-color: #C7C2B5;
+  }
+#messageBox {
+    text-align: center;
+    color: #D55B4A;
+}
+#theEndMessage {
+    text-align: center;
+    color: orange;
+    margin-top: 0px;
+    padding-top: 0px;
+}
+h1{
+    color: goldenrod;
+    text-align: center ;
+}
+#container {
+    width:100%;
+    text-align:center;
+}
+
+.column {
+    float: left;
+    width: 33.32%;
+    
+  }
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .centerText{
+      color: #C7C2B5;
+      text-align: center ;
+  }
+  .lower{
+      margin-top: 130px;
+  }

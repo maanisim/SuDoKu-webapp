@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuDoku Project</title>
+    <!--<link rel="stylesheet" href="style.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+    <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Gotu">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    <div id="container">
+
+        </div>
+
+    <div class="row">
+        <div class="column">
+            <div class="lower">
+                <h1 id="left">Status Info</h1>
+                <h2 class="centerText" id="liveStatistics"></h2>
+            </div>
+
+        </div>
+        <div class="column">
+          <div id="jsGame">
+            <h1>SuDoKu</h1>
+
+            <table id="gameBoard"></table>
+            <br>
+            <div id="messageBox"></div>
+            <h1 id="theEndMessageH1"><div id="theEndMessage"></div></h1>
+            <script type="text/javascript" src="{{ url_for('static', filename= 'game.pretty.js') }}"></script>
+            <!--<script type="text/javascript" src="game.pretty.js"></script>-->
+        </div>
+        </div>
+        <div class="column">
+            <div class="lower">
+          <h1 id="right">Help & Info</h1>
+          <div class="buttons">
+            <button onclick="isBoardValidAPICheck()">Submit</button>
+            <button onclick="findSolutions();">Find Solutions</button>
+            <button onclick="location.reload();">Next Puzzle</button>
+            <!-- Yes this way is faster but button doesn't load it if clicked to rapidly.-->
+            <!--<button onclick="newBoard();">Next Puzzle</button>-->
+
+            
+        </div>
+    <p class="centerText">
+        To play simply put click corresponding cell on the grid<br> and press desired number on your keyboard<br>
+    </p>
+    <p class="centerText" style="color: red;">
+        You do not need to complete the game<br> to search for solutions!
+    </p>
+
+    <p class="centerText">
+        To win place sudoku puzzles so that there is 1..9 numbers <br>
+        in each row, column and 3x3 cell.<br>
+        Have fun & good luck :)<br><br>
+        If there is collision in your solved puzzle<br> the solution is considered not valid.
+    </p>
+    </div>
+    </div>
+      </div>
+</body>
+</html>
