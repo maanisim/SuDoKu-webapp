@@ -1,37 +1,46 @@
 /*SuDoKu.js stylesheet*/
 
 body {
-    background-color: #303030;
+    background-color: #ffffff;
     font-family: 'Gotu', serif;
+    overflow: hidden; 
 
 }
 table{
-    margin-left: auto;
+    margin-left: 33%;
     margin-right: auto;
-    margin-top: 2%;
+    margin-top: 1%;
     border-collapse: collapse;
     cursor: crosshair;
 }
 td {
-    border: 1px solid #648864;
+    border: 1px solid black;
     width: 60px;
     height: 60px;
     font-size:30px;
     text-align: center;
-    background-color: #0A69A2;
+    background-color: #e3e3e3;
 }
 td:hover {
-    opacity: 0.8;
+    background-color: #03e7f3;
 }
 .buttons button {
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 30%;
-    background-color: #C7C2B5;
+    background-color: #2a78ff;
   }
   button{
-    background-color: #C7C2B5;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
   }
 #messageBox {
     text-align: center;
@@ -44,8 +53,8 @@ td:hover {
     padding-top: 0px;
 }
 h1{
-    color: goldenrod;
-    text-align: center ;
+    color: #4188ed;
+    text-align: center;
 }
 #container {
     width:100%;
@@ -54,8 +63,7 @@ h1{
 
 .column {
     float: left;
-    width: 33.32%;
-    
+    width: 50%;
   }
   
   /* Clear floats after the columns */
@@ -65,9 +73,19 @@ h1{
     clear: both;
   }
   .centerText{
-      color: #C7C2B5;
+      color: black;
       text-align: center ;
   }
   .lower{
       margin-top: 130px;
+  }
+  .buttonPop {
+    display:inline;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 5px;
+    background-color: #2a78ff;
+  }
+  #messageBox{
+      margin: 0px;
   }

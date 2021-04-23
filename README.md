@@ -15,5 +15,5 @@ pip3 install -r requirements.txt
 ```
 venv\Scripts\activate
 python3 api.py
-open in browser http://127.0.0.1
+open in browser http://127.0.0.1:5000/
 ```

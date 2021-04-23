@@ -18,10 +18,7 @@
 
     <div class="row">
         <div class="column">
-            <div class="lower">
-                <h1 id="left">Status Info</h1>
-                <h2 class="centerText" id="liveStatistics"></h2>
-            </div>
+
 
         </div>
         <div class="column">
@@ -41,7 +38,7 @@
           <h1 id="right">Help & Info</h1>
           <div class="buttons">
             <button onclick="isBoardValidAPICheck()">Submit</button>
-            <button onclick="findSolutions();">Find Solutions</button>
+            <button onclick="setSolveBoard();">Solve for Me</button>
             <button onclick="location.reload();">Next Puzzle</button>
             <!-- Yes this way is faster but button doesn't load it if clicked to rapidly.-->
             <!--<button onclick="newBoard();">Next Puzzle</button>-->
@@ -58,8 +55,7 @@
     <p class="centerText">
         To win place sudoku puzzles so that there is 1..9 numbers <br>
         in each row, column and 3x3 cell.<br>
-        Have fun & good luck :)<br><br>
-        If there is collision in your solved puzzle<br> the solution is considered not valid.
+        Have fun & good luck :)
     </p>
     </div>
     </div>

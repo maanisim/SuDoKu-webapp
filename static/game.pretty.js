@@ -1,41 +1,28 @@
 /*
-    Assingment by Michal Anisimow SID: 201362335
     In this assingment I've decided not to use classes as IE11 doesn't support them as described below:
     https://kangax.github.io/compat-table/es6/
 */ 
+
 //Default variable names
 gameBoardID = "gameBoard";
-var userEntity = "Submarine";
-var playerID = "U", enemyID = "K", obstacleID = "O", emptySpaceID = " ",pointID="5";
-var allowedInput = [0,1,2,3,4,5,6,7,8,9];
-
+var emptySpaceID = " ";
+var allowedInput = ["1","2","3","4","5","6","7","8","9"];
 var stage = "setup";
 var stage0 = "setup",stage1 = "play", stage2 = "end";
-
-var playerX, playerY;
-var enemies = new Array();
-var obstacles = new Array();
-var points = new Array();
-var isObstacle = false;
-var isEnemy = false;
-var boardY = 9,
-  boardX = 9;
-var currentRound = 0;
+var boardSize = 9;
 var msg = "messageBox";
-var msgEnd = "theEndMessageH1";
-var tmpYX;
-var board,unedtiableBoard,table,distanceFromPointY,distanceFromPointX,movePlayer,tmpPlayerX
-,tmpPlayerY,messageBox;
-var obj,obj1,isValidBoard,validityCheck,didnAskedForSolutions = true;
-
+var board,unedtiableBoard,table,messageBox;
+var obj,solvedBoardObj,isValidBoard,didnAskedForSolutions = true;
+var serverDomain = "http://127.0.0.1:5000/";
 //structure the gameboard
-game(boardY, boardX);
+game(boardSize,boardSize);
 newBoard(40)
 
+//setBoard() creates a board from the input given by the API
 function waitForApiBoard(){
   if(typeof obj !== "undefined"){
-    for (let i = 0; i < boardX; i++) {
-      for (let j = 0; j < boardY; j++) {
+    for (let i = 0; i < boardSize; i++) {
+      for (let j = 0; j < boardSize; j++) {
         if(obj['board'][i][j] == 0){
           board[i][j] = 0
           unedtiableBoard[i][j] = 0
@@ -54,17 +41,17 @@ function waitForApiBoard(){
 }
 
 function isBoardValidAPICheck() {
-  stringToSend = enocdePuzzle();
-  fetch('http://127.0.0.1:5000/valid?puzzle='+stringToSend)
+  stringToSend = encodeBoard();
+  fetch('/127.0.0.1:5000/valid?puzzle='+stringToSend)
     .then(response => response.json())
     .then(data => isValidBoard = data)
     .then(() => console.log(isValidBoard))
     function waitForAPIValidCheck(){
       if(typeof isValidBoard !== "undefined"){
         if(isValidBoard['isValid'] == true && didnAskedForSolutions == true){
-          setMessage("Congratulations! You have solved the challenge", msg);
+          setMessage("Congratulations!", msg);
         } if(isValidBoard['isValid'] == true && didnAskedForSolutions == false){
-          setMessage("You will always be a winner in my heart. :P  <button onclick=\"location.reload();\">Next Puzzle?</button>", msg);
+          setMessage("<button class=\"buttonPop\" onclick=\"location.reload();\">Next Puzzle?</button>   Better luck next time!", msg);
         }else {
           setMessage("Your solution is not valid! Try again.", msg);
         }
@@ -77,8 +64,8 @@ function isBoardValidAPICheck() {
 }
 
 function clearBoard(){
-    for (let i = 0; i < boardX; i++) {
-      for (let j = 0; j < boardY; j++) {
+    for (let i = 0; i < boardSize; i++) {
+      for (let j = 0; j < boardSize; j++) {
         board[i][j] = 0;
         //drawTextInCell("", i, j, null, null)
         document.getElementsByTagName("tr")[i].getElementsByTagName("td")[j].innerText = emptySpaceID;
@@ -91,19 +78,28 @@ function clearBoard(){
 function newBoard(difficulty) {
   clearBoard();
   var difficultyString = 40;
-  if(difficulty != null && difficulty > 0 && difficulty < boardX*boardY-1){
+  if(difficulty != null && difficulty > 0 && difficulty < boardSize*boardSize-1){
     difficultyString = difficulty;
   }
-    fetch('http://127.0.0.1:5000/new?keepCells='+difficultyString.toString())
+    fetch(serverDomain+'new?keepCells='+difficultyString.toString())
     .then(response => response.json())
     .then(data => obj = data)
     .then(() => console.log(obj))
     waitForApiBoard()
+    
+    //So we abuse browser cache to do our bidding by preloading all the pictures of the numbers
+    var i;
+    for (i = 0; i < allowedInput.length; i++) {
+      drawImageInCell(allowedInput[i]+".png", 0, 0, null, null);
+    }
+    document.getElementsByTagName("tr")[0].getElementsByTagName("td")[0].innerHTML = '';
+    
 }
 
-function game(boardY, boardX) {
-  board = createBoardArray(boardY, boardX);
-  unedtiableBoard = createBoardArray(boardY, boardX);
+// creates a structure for the gameboard
+function game(boardSize, boardSize) {
+  board = createBoardArray(boardSize, boardSize);
+  unedtiableBoard = createBoardArray(boardSize, boardSize);
   table = document.getElementById(gameBoardID);
   init(table);
 }
@@ -132,7 +128,7 @@ function init(table) {
   }
 }
 
-
+//main user places number in cell logic
 function play(y, x, event) {
   //capture the keypresses
   document.onkeypress = function (e) {
@@ -141,63 +137,35 @@ function play(y, x, event) {
     setMessage("", msg);
     console.log(pressed + " =" + x + ":" + y);
     //if still in setup
-    if (stage == stage0) {
-      //if clicked on empty cell
-      if (unedtiableBoard[y][x] == 0) {
-        //if inputted player and player doesn't exist
-        if (pressed == "1" || pressed == "2" || pressed == "3" || pressed == "4" || pressed == "5" || pressed == "6" || pressed == "7" || pressed == "8" || pressed == "9") {
-          //drawTextInCell(pressed, y, x, null, null);
-          drawImageInCell(pressed+".png", y, x, null, null)
-          board[y][x] = pressed;
-        } else {
-          setMessage("Unrecognized character!", msg);
-        }
-        //else the cell is already occupied.
+    //if clicked on empty cell
+    if (unedtiableBoard[y][x] == 0) {
+      //if inputted player and player doesn't exist
+      if (allowedInput.includes(pressed)) {
+        //drawTextInCell(pressed, y, x, null, null);
+        drawImageInCell(pressed+".png", y, x, null, null)
+        board[y][x] = pressed;
       } else {
-        if (pressed == "1" || pressed == "2" || pressed == "3" || pressed == "4" || pressed == "5" || pressed == "6" || pressed == "7" || pressed == "8" || pressed == "9"){
-          setMessage("This cell was pre-set and cannot be edited!", msg);
-        }
-        
-        
-        //setMessage("That cell is already occupied!", msg);
+        setMessage("Unrecognized character!", msg);
       }
-      //if "play" stage and one player is alive
-    } else if (stage == stage1 && playersCount == 1) {
-      userMove(pressed);
-      showStatistics(true);
+      //else the cell is already occupied.
+    } else {
+      if (allowedInput.includes(pressed)){
+        setMessage("This cell was pre-set and cannot be edited!", msg);
+      }
     }
-  };
+    }
 }
 
-//end() was clicked by the user
-function end(){
-  if(stage==stage1){
-    stage = stage2;
-    totalPoints = userPointsCount+enemyPointsCount;
-    pointsCheck();  
-  } 
-}
-
-//push new element used in user input of the elements
-function pushNewElement(type,entity,pressed,y,x){
-  entity.push([y, x]);
-  board[y][x] = pressed;
-  var pictureType;
-  if ((type == "0" || type == "1" || type == "2" || type == "3" || type == "4" || type == "5" || type == "6" || type == "7" || type == "8" || type == "9")) {
-    pictureType = "obstacle.png";
-  } 
-  drawImageInCell(pictureType, y, x, null, null);
-
-}
-
+// Used to draw Images in desired cell
 function drawImageInCell(imageName, y, x, oldY, oldX) {
     document.getElementsByTagName("tr")[y].getElementsByTagName("td")[x].innerHTML =
-    '<img src="img/' + imageName +'" draggable="false" height="32" width="32">';
+    '<img src="img/' + imageName +'" draggable="false" height="25" width="18">';
     if (oldY != null && oldX != null) {
       document.getElementsByTagName("tr")[oldY].getElementsByTagName("td")[oldX].innerText = emptySpaceID;
     }
   }
 
+// Used to draw Text in desired cell
 function drawTextInCell(value, y, x, oldY, oldX) {
   document.getElementsByTagName("tr")[y].getElementsByTagName("td")[x].innerHTML =
   value;
@@ -206,38 +174,11 @@ function drawTextInCell(value, y, x, oldY, oldX) {
   }
 }
 
-//show statistics (left header side of the game.html)
-function showStatistics(show) {
-  if (show == true) {
-    setMessage(
-      "Round: " +
-        currentRound +
-        "<br>User Score: " +
-        userPointsCount +
-        "/" +
-        totalPoints +
-        "<br>Enemy Score:" +
-        enemyPointsCount +
-        "/" +
-        totalPoints +
-        "<br>Fuel: " +
-        currentFuel +
-        "<br>Enemies: " +
-        enemiesCount +
-        "<br>" +
-        "Obstacles: " +
-        obstaclesCount,
-      "liveStatistics"
-    );
-  } else {
-    setMessage("", "liveStatistics");
-  }
-}
-
-  function enocdePuzzle(){
+  //encodes the board string into query friendly format.
+  function encodeBoard(){
     var solutionEncoded = "";
-    for (let i = 0; i < boardX; i++) {
-      for (let j = 0; j < boardY; j++) {
+    for (let i = 0; i < boardSize; i++) {
+      for (let j = 0; j < boardSize; j++) {
         if(unedtiableBoard[i][j] == 0){
           solutionEncoded = solutionEncoded+".";
         }
@@ -248,10 +189,12 @@ function showStatistics(show) {
     }
     return(solutionEncoded)
   }
-
-  function findSolutions(){
+//setSolveBoard() sets the board to solved by asking the API for how to solve it.
+  function setSolveBoard(){
     didnAskedForSolutions = false;
     /*
+
+    // debuging
     for (let i = 0; i < boardX; i++) {
       for (let j = 0; j < boardY; j++) {
         board[i][j] = 0
@@ -259,29 +202,37 @@ function showStatistics(show) {
         drawTextInCell("", i, j, null, null);  
       }
     }*/
-    stringToSend = enocdePuzzle();
+    
+    //1. encode puzzle
+    stringToSend = encodeBoard();
     console.log(stringToSend);
-    fetch('http://127.0.0.1:5000/solve?puzzle='+stringToSend)
+    fetch(serverDomain+'solve?puzzle='+stringToSend)
     .then(response => response.json())
-    .then(data => obj1 = data)
-    .then(() => console.log(obj1))
-    function waitForApiCallBack(){
-      if(typeof obj1 !== "undefined"){
-        for (let i = 0; i < boardX; i++) {
-          for (let j = 0; j < boardY; j++) {
-              board[i][j] = obj1['board'][i][j]
-              unedtiableBoard[i][j] = obj1['board'][i][j]
-              drawTextInCell(obj1['board'][i][j], i, j, null, null);  
+    .then(data => solvedBoardObj = data)
+    .then(() => console.log(solvedBoardObj))
+    
+
+    // Checks whether the api gave the solved data.
+    function isSolvedAPI(){
+      if(typeof solvedBoardObj !== "undefined"){
+        for (let i = 0; i < boardSize; i++) {
+          for (let j = 0; j < boardSize; j++) {
+              board[i][j] = solvedBoardObj['board'][i][j]
+              unedtiableBoard[i][j] = solvedBoardObj['board'][i][j]
+              drawTextInCell(solvedBoardObj['board'][i][j], i, j, null, null);  
+              //setMessage("<button class=\"buttonPop\" onclick=\"location.reload();\">Next Puzzle?</button>", msg);
           }
           
         }
       }
       else{
-          setTimeout(waitForApiCallBack, 250);
+          //try again javascript loads it faster then network provides data
+          setTimeout(isSolvedAPI, 250);
       }
       
     }
-    waitForApiCallBack()
+    //in function since the data takes forever to arrive..
+    isSolvedAPI()
   }
 
   
