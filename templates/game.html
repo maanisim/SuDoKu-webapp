@@ -38,9 +38,9 @@
             <button onclick="isBoardValidAPICheck()">Submit</button>
             <button onclick="setSolveBoard();">Solve for Me</button>
             <button onclick="setDarkMode();">Dark/Light mode</button>
-            <button onclick="setBoardClear();setBoard(60);">Easy</button>
-            <button onclick="setBoardClear();setBoard(50);">Medium</button>
-            <button onclick="setBoardClear();setBoard(40);">Hard</button>
+            <button onclick="setBoardMain(60);">Easy</button>
+            <button onclick="setBoardMain(50);">Medium</button>
+            <button onclick="setBoardMain(40);">Hard</button>
             <!-- Yes this way is faster but button doesn't load it if clicked to rapidly.-->
             <!--<button onclick="newBoard();">Next Puzzle</button>-->
 
@@ -56,12 +56,5 @@
     </div>
       </div>
 
-      <script>
-          //https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_toggle_dark_mode credit of w3 schools
-          function setDarkMode() {
-            var element = document.body;
-            element.classList.toggle("dark-mode");
-            } 
-      </script>
 </body>
 </html>

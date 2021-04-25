@@ -245,8 +245,21 @@ function drawTextInCell(value, y, x, oldY, oldX) {
     // In function since the data takes forever to arrive..
     isSolvedAPI()
   }
+/*
+  Set dark/white mode UI
+  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_toggle_dark_mode credit of w3 schools
+*/
+function setDarkMode() {
+  var element = document.body;
+  element.classList.toggle("dark-mode");
+}
 
-  
+// Main function used to set brand new board by the user.
+function setBoardMain(difficulty){
+  setBoardClear();
+  setMessage("", msg);
+  setBoard(difficulty);
+}
 
 /*
     First argument message, second argument is the element id used in html
