@@ -1,6 +1,8 @@
 /*
-    In this assingment I've decided not to use classes as IE11 doesn't support them as described below:
+    In this project I've decided not to use classes as IE11 doesn't support them as described below:
     https://kangax.github.io/compat-table/es6/
+    However later on one of the code optimizations I've added has broken the support for IE11 anyways.. 
+    so now I am left without IE11 support :/
 */ 
 
 //Default variable names
@@ -14,6 +16,7 @@ var msg = "messageBox";
 var board,unedtiableBoard,table,messageBox;
 var obj,solvedBoardObj,isValidBoard,didnAskedForSolutions = true;
 var serverDomain = "http://127.0.0.1:5000/";
+
 //structure the gameboard
 game(boardSize,boardSize);
 newBoard(40)
@@ -40,6 +43,7 @@ function waitForApiBoard(){
   }
 }
 
+// Check whether board has only valid answers by fetching it to API
 function isBoardValidAPICheck() {
   stringToSend = encodeBoard();
   fetch(serverDomain+'valid?puzzle='+stringToSend)
@@ -63,31 +67,34 @@ function isBoardValidAPICheck() {
     waitForAPIValidCheck()
 }
 
-function clearBoard(){
+// Clear whole board visually and on board 
+function setBoardClear(){
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < boardSize; j++) {
         board[i][j] = 0;
         //drawTextInCell("", i, j, null, null)
         document.getElementsByTagName("tr")[i].getElementsByTagName("td")[j].innerText = emptySpaceID;
+        document.getElementsByTagName("tr")[i].getElementsByTagName("td")[j].innerHTML = emptySpaceID;
 
       }
     }
   }
 
-
+// Generate a brand new board
 function newBoard(difficulty) {
-  clearBoard();
+  setBoardClear();
   var difficultyString = 40;
   if(difficulty != null && difficulty > 0 && difficulty < boardSize*boardSize-1){
     difficultyString = difficulty;
   }
+  // Fetch board with only "keepCells" of numbers
     fetch(serverDomain+'new?keepCells='+difficultyString.toString())
     .then(response => response.json())
     .then(data => obj = data)
     .then(() => console.log(obj))
     waitForApiBoard()
     
-    //So we abuse browser cache to do our bidding by preloading all the pictures of the numbers
+    // So we abuse browser cache to do our bidding by preloading all the pictures of the numbers
     var i;
     for (i = 0; i < allowedInput.length; i++) {
       drawImageInCell(allowedInput[i]+".png", 0, 0, null, null);
@@ -96,7 +103,7 @@ function newBoard(difficulty) {
     
 }
 
-// creates a structure for the gameboard
+// Creates a structure for the gameboard
 function game(boardSize, boardSize) {
   board = createBoardArray(boardSize, boardSize);
   unedtiableBoard = createBoardArray(boardSize, boardSize);
@@ -104,7 +111,7 @@ function game(boardSize, boardSize) {
   init(table);
 }
 
-//create the board as array
+// Create the board as array
 function createBoardArray(cols, rows) {
   var arr = new Array(cols);
   for (var i = 0; i < arr.length; i++) {
@@ -113,7 +120,7 @@ function createBoardArray(cols, rows) {
   return arr;
 }
 
-//initialize the board array
+// Initialize the board array
 function init(table) {
   for (var y = 0; y < board.length; y++) {
     var tr = document.createElement("tr");
@@ -128,28 +135,31 @@ function init(table) {
   }
 }
 
-//main user places number in cell logic
+// Main user places number in cell logic
 function play(y, x, event) {
-  //capture the keypresses
+  // Capture the keypresses
   document.onkeypress = function (e) {
     e || window.event;
     var pressed = String.fromCharCode(e.charCode);
     setMessage("", msg);
     console.log(pressed + " =" + x + ":" + y);
-    //if still in setup
-    //if clicked on empty cell
+    // If clicked on empty cell
     if (unedtiableBoard[y][x] == 0) {
-      //if inputted player and player doesn't exist
+      // If inputted player and player doesn't exist
       if (allowedInput.includes(pressed)) {
         //drawTextInCell(pressed, y, x, null, null);
         drawImageInCell(pressed+".png", y, x, null, null)
-        board[y][x] = pressed;
+        board[y][x] = parseInt(pressed);
+      } else if(pressed == 0){
+        board[y][x] = 0;
+        document.getElementsByTagName("tr")[y].getElementsByTagName("td")[x].innerText = "";
+        document.getElementsByTagName("tr")[y].getElementsByTagName("td")[x].innerHTML = "";
       } else {
         setMessage("Unrecognized character!", msg);
       }
-      //else the cell is already occupied.
+      // Else the cell is already occupied.
     } else {
-      if (allowedInput.includes(pressed)){
+      if (allowedInput.includes(pressed) || pressed == 0){
         setMessage("This cell was pre-set and cannot be edited!", msg);
       }
     }
@@ -174,7 +184,7 @@ function drawTextInCell(value, y, x, oldY, oldX) {
   }
 }
 
-  //encodes the board string into query friendly format.
+  // Encodes the board string into query friendly format.
   function encodeBoard(){
     var solutionEncoded = "";
     for (let i = 0; i < boardSize; i++) {
@@ -189,12 +199,12 @@ function drawTextInCell(value, y, x, oldY, oldX) {
     }
     return(solutionEncoded)
   }
-//setSolveBoard() sets the board to solved by asking the API for how to solve it.
+// setSolveBoard() sets the board to solved by asking the API for how to solve it.
   function setSolveBoard(){
     didnAskedForSolutions = false;
     /*
 
-    // debuging
+    // Debuging
     for (let i = 0; i < boardX; i++) {
       for (let j = 0; j < boardY; j++) {
         board[i][j] = 0
@@ -203,9 +213,10 @@ function drawTextInCell(value, y, x, oldY, oldX) {
       }
     }*/
     
-    //1. encode puzzle
+    // 1. encode puzzle
     stringToSend = encodeBoard();
     console.log(stringToSend);
+    // 2. send it
     fetch(serverDomain+'solve?puzzle='+stringToSend)
     .then(response => response.json())
     .then(data => solvedBoardObj = data)
@@ -226,12 +237,12 @@ function drawTextInCell(value, y, x, oldY, oldX) {
         }
       }
       else{
-          //try again javascript loads it faster then network provides data
+          // Try again javascript loads it faster then network provides data
           setTimeout(isSolvedAPI, 250);
       }
       
     }
-    //in function since the data takes forever to arrive..
+    // In function since the data takes forever to arrive..
     isSolvedAPI()
   }
 
