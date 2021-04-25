@@ -43,6 +43,15 @@ td {
     text-align: center;
     background-color: #e3e3e3;
 }
+
+/*
+row selected
+td:not(:last-child):nth-child(3n)  {
+    border-right: 3px solid black;
+}
+how does one select a column :shrug:
+*/
+
 td:hover {
     background-color: #03e7f3;
 }
