@@ -7,9 +7,7 @@
     <!--<link rel="stylesheet" href="style.css">-->
     <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
     <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css?family=Gotu">
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    href="https://fonts.googleapis.com/css?family=Gotu">    
 </head>
 <body>
     <div id="container">
@@ -39,7 +37,10 @@
           <div class="buttons">
             <button onclick="isBoardValidAPICheck()">Submit</button>
             <button onclick="setSolveBoard();">Solve for Me</button>
-            <button onclick="location.reload();">Next Puzzle</button>
+            <button onclick="setDarkMode();">Dark/Light mode</button>
+            <button onclick="setBoardClear();setBoard(60);">Easy</button>
+            <button onclick="setBoardClear();setBoard(50);">Medium</button>
+            <button onclick="setBoardClear();setBoard(40);">Hard</button>
             <!-- Yes this way is faster but button doesn't load it if clicked to rapidly.-->
             <!--<button onclick="newBoard();">Next Puzzle</button>-->
 
@@ -51,14 +52,16 @@
     <p class="centerText" style="color: red;">
         You do not need to complete the game<br> to search for solutions!
     </p>
-
-    <p class="centerText">
-        To win place sudoku puzzles so that there is 1..9 numbers <br>
-        in each row, column and 3x3 cell.<br>
-        Have fun & good luck :)
-    </p>
     </div>
     </div>
       </div>
+
+      <script>
+          //https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_toggle_dark_mode credit of w3 schools
+          function setDarkMode() {
+            var element = document.body;
+            element.classList.toggle("dark-mode");
+            } 
+      </script>
 </body>
 </html>

@@ -1,11 +1,33 @@
 /*SuDoKu.js stylesheet*/
 
+
+.dark-mode {
+    background-color: #121212;
+    color: #121212;
+}
+.dark-mode .centerText{
+    color: white;
+}
+.dark-mode h1{
+    color: #2962C4;
+}
+  
 body {
     background-color: #ffffff;
     font-family: 'Gotu', serif;
     overflow: hidden; 
 
 }
+.dark-mode td {
+    border: 1px solid black;
+    width: 60px;
+    height: 60px;
+    font-size:30px;
+    text-align: center;
+    background-color: #303030;
+    color: white;
+}
+
 table{
     margin-left: 33%;
     margin-right: auto;
@@ -31,7 +53,8 @@ td:hover {
     width: 30%;
     background-color: #2a78ff;
   }
-  button{
+  
+button{
     border: none;
     color: white;
     padding: 15px 32px;

@@ -19,19 +19,26 @@ var serverDomain = "http://127.0.0.1:5000/";
 
 //structure the gameboard
 game(boardSize,boardSize);
-newBoard(40)
+setBoard(40);
+// So we abuse browser cache to do our bidding by preloading all the pictures of the numbers
+var i;
+for (i = 0; i < allowedInput.length; i++) {
+  drawImageInCell(allowedInput[i]+".png", 0, 0, null, null);
+}
 
-//setBoard() creates a board from the input given by the API
+document.getElementsByTagName("tr")[0].getElementsByTagName("td")[0].innerHTML = '';
+
+// Waits for the board to be given by the API
 function waitForApiBoard(){
   if(typeof obj !== "undefined"){
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < boardSize; j++) {
         if(obj['board'][i][j] == 0){
-          board[i][j] = 0
-          unedtiableBoard[i][j] = 0
+          board[i][j] = 0;
+          unedtiableBoard[i][j] = 0;
         } else{
-          board[i][j] = obj['board'][i][j]
-          unedtiableBoard[i][j] = obj['board'][i][j]
+          board[i][j] = obj['board'][i][j];
+          unedtiableBoard[i][j] = obj['board'][i][j];
           drawTextInCell(obj['board'][i][j], i, j, null, null);  
         }
       }
@@ -55,7 +62,7 @@ function isBoardValidAPICheck() {
         if(isValidBoard['isValid'] == true && didnAskedForSolutions == true){
           setMessage("Congratulations!", msg);
         } if(isValidBoard['isValid'] == true && didnAskedForSolutions == false){
-          setMessage("<button class=\"buttonPop\" onclick=\"location.reload();\">Next Puzzle?</button>   Better luck next time!", msg);
+          setMessage("<button class=\"buttonPop\" onclick=\"setBoardClear();setBoard(50);setMessage('', msg);\">Next Puzzle?</button>   Better luck next time!", msg);
         }else {
           setMessage("Your solution is not valid! Try again.", msg);
         }
@@ -81,26 +88,19 @@ function setBoardClear(){
   }
 
 // Generate a brand new board
-function newBoard(difficulty) {
-  setBoardClear();
+function setBoard(difficulty) {
+  obj = undefined;
   var difficultyString = 40;
   if(difficulty != null && difficulty > 0 && difficulty < boardSize*boardSize-1){
     difficultyString = difficulty;
   }
+
   // Fetch board with only "keepCells" of numbers
     fetch(serverDomain+'new?keepCells='+difficultyString.toString())
     .then(response => response.json())
     .then(data => obj = data)
     .then(() => console.log(obj))
-    waitForApiBoard()
-    
-    // So we abuse browser cache to do our bidding by preloading all the pictures of the numbers
-    var i;
-    for (i = 0; i < allowedInput.length; i++) {
-      drawImageInCell(allowedInput[i]+".png", 0, 0, null, null);
-    }
-    document.getElementsByTagName("tr")[0].getElementsByTagName("td")[0].innerHTML = '';
-    
+    waitForApiBoard();
 }
 
 // Creates a structure for the gameboard
