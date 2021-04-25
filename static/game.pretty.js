@@ -62,7 +62,7 @@ function isBoardValidAPICheck() {
         if(isValidBoard['isValid'] == true && didnAskedForSolutions == true){
           setMessage("Congratulations!", msg);
         } if(isValidBoard['isValid'] == true && didnAskedForSolutions == false){
-          setMessage("<button class=\"buttonPop\" onclick=\"setBoardClear();setBoard(50);setMessage('', msg);\">Next Puzzle?</button>   Better luck next time!", msg);
+          setMessage("<button class=\"buttonPop\" onclick=\"setBoardMain(50);\">Next Puzzle?</button>   Better luck next time!", msg);
         }else {
           setMessage("Your solution is not valid! Try again.", msg);
         }
