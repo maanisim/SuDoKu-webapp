@@ -1,5 +1,5 @@
 # SuDoKu Game
-Made purely in JS/HTML/CSS/PYTHON with support for internet explorer 11, Firefox, Chrome and Safari.
+Made purely in JS/HTML/CSS/PYTHON with support for Firefox, Chrome and Safari.
 ![](showcase.gif)
 
 # How to setup
