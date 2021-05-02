@@ -36,12 +36,14 @@
           <h1 id="right">Buttons</h1>
           <div class="buttons">
             <button onclick="isBoardValidAPICheck()">Submit</button>
-            <button onclick="setSolveBoard();">Solve for Me</button>
+            <button onclick="setSolveBoard();">Let computer solve it</button>
             <button onclick="setDarkMode();">Dark/Light mode</button>
-            <button onclick="setBoardMain(60);" style="background-color:rgb(30, 223, 12)">Easy</button>
-            <button onclick="setBoardMain(50);" style="background-color:rgb(223, 184, 12)">Medium</button>
-            <button onclick="setBoardMain(40);" style="background-color:rgb(223, 54, 12)">Hard</button>
-            <button onclick="window.location.href='/tutorial'">Tutorial</button>
+            <br>
+            <button onclick="setBoardMain(60);" style="background-color:rgb(30, 223, 12)">Easy Difficulty</button>
+            <button onclick="setBoardMain(50);" style="background-color:rgb(223, 184, 12)">Medium Difficulty</button>
+            <button onclick="setBoardMain(40);" style="background-color:rgb(223, 54, 12)">Hard Difficulty</button>
+            <br>
+            <button onclick="window.location.href='/tutorial'">How do I play sudoku?</button>
 
             <!-- Yes this way is faster but button doesn't load it if clicked to rapidly.-->
             <!--<button onclick="newBoard();">Next Puzzle</button>-->
@@ -49,10 +51,7 @@
             
         </div>
     <p class="centerText">
-        To play simply put click corresponding cell on the grid<br> and press desired 1..9 number on your keyboard<br>
-    </p>
-    <p class="centerText" style="color: red;">
-        You do not need to complete the game<br> to search for solutions!
+        To play simply click corresponding cell on the grid<br> and press desired 1..9 number on your keyboard<br>
     </p>
     </div>
     </div>
