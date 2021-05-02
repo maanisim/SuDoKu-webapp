@@ -52,7 +52,7 @@ function waitForApiBoard(){
 
 // Check whether board has only valid answers by fetching it to API
 function isBoardValidAPICheck() {
-  stringToSend = encodeBoard();
+  stringToSend = encodeBoard(true);
   fetch(serverDomain+'valid?puzzle='+stringToSend)
     .then(response => response.json())
     .then(data => isValidBoard = data)
@@ -60,10 +60,14 @@ function isBoardValidAPICheck() {
     function waitForAPIValidCheck(){
       if(typeof isValidBoard !== "undefined"){
         if(isValidBoard['isValid'] == true && didnAskedForSolutions == true){
-          setMessage("Congratulations!", msg);
-        } if(isValidBoard['isValid'] == true && didnAskedForSolutions == false){
+          setMessage("You won! Congratulations!", msg);
+        }else if(isValidBoard['isValid'] == true && didnAskedForSolutions == false){
           setMessage("<button class=\"buttonPop\" onclick=\"setBoardMain(50);\">Next Puzzle?</button>   Better luck next time!", msg);
         }else {
+          console.log(isValidBoard['isValid']);
+          console.log(didnAskedForSolutions);
+          console.log(typeof(isValidBoard['isValid']));
+          console.log(typeof(didnAskedForSolutions));
           setMessage("Your solution is not valid! Try again.", msg);
         }
       }
@@ -185,20 +189,27 @@ function drawTextInCell(value, y, x, oldY, oldX) {
 }
 
   // Encodes the board string into query friendly format.
-  function encodeBoard(){
+  function encodeBoard(stillSolving){
+    if(stillSolving == true){
+      tmpBoard = board;
+    } else {
+      tmpBoard = unedtiableBoard;
+    }
+    
     var solutionEncoded = "";
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < boardSize; j++) {
-        if(unedtiableBoard[i][j] == 0){
+        if(tmpBoard[i][j] == 0){
           solutionEncoded = solutionEncoded+".";
         }
         else{
-          solutionEncoded = solutionEncoded+unedtiableBoard[i][j];
+          solutionEncoded = solutionEncoded+board[i][j];
         }
       }
     }
     return(solutionEncoded)
   }
+
 // setSolveBoard() sets the board to solved by asking the API for how to solve it.
   function setSolveBoard(){
     didnAskedForSolutions = false;
@@ -214,7 +225,7 @@ function drawTextInCell(value, y, x, oldY, oldX) {
     }*/
     
     // 1. encode puzzle
-    stringToSend = encodeBoard();
+    stringToSend = encodeBoard(false);
     console.log(stringToSend);
     // 2. send it
     fetch(serverDomain+'solve?puzzle='+stringToSend)

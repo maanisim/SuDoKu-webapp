@@ -44,13 +44,13 @@ def main():
 def isValidBoard(boardToCheck):
     tmpValue = None
     for row in range(0,boardSize):
-        for col in (0,boardSize-1):
+        for col in range(0,boardSize-1):
             tmpValue = boardToCheck[row][col]
             boardToCheck[row][col] = 0
             if((isValid(boardToCheck, tmpValue, row, col)) == False):
+                print("{0} {1} {2}".format(tmpValue, row, col))
                 return False
-            else:
-                boardToCheck[row][col] = tmpValue
+            boardToCheck[row][col] = tmpValue
     return True
                 
     for a in s:

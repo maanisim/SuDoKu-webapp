@@ -82,6 +82,8 @@ class isAValidPuzzle(Resource):
         puzzle = request.args.get('puzzle')
         if(puzzle != None):
             outputBoard = decodeSudoku(puzzle)
+            for a in outputBoard:
+                print(a)
             if(outputBoard == None):
                 return {'message': 'Undefined input'}
             else:
