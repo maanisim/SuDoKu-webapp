@@ -16,8 +16,12 @@ api = Api(app)
 Load html page for SuDoKu board
 '''
 @app.route("/")
-def hello():
+def index():
     return render_template('game.html')
+
+@app.route("/tutorial")
+def tutorial():
+    return render_template('tutorial.html')
 
 '''
 Creates a brand new puzzle when GET requested
@@ -82,8 +86,6 @@ class isAValidPuzzle(Resource):
         puzzle = request.args.get('puzzle')
         if(puzzle != None):
             outputBoard = decodeSudoku(puzzle)
-            for a in outputBoard:
-                print(a)
             if(outputBoard == None):
                 return {'message': 'Undefined input'}
             else:

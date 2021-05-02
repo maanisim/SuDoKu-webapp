@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuDoku Project</title>
+    <!--<link rel="stylesheet" href="style.css">-->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'style.css') }}">
+    <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css?family=Gotu">    
+</head>
+<body>
+    <div id="container">
+
+        </div>
+
+    <div class="row">
+        <div class="column">
+
+
+        </div>
+        <div class="column">
+          <div id="jsGame">
+            <h1>SuDoKu</h1>
+
+            <table id="gameBoard"></table>
+            <br>
+            <div id="messageBox"></div>
+            <h1 id="theEndMessageH1"><div id="theEndMessage"></div></h1>
+            <img src="/img/tutorial.png" alt="tutorial" style="margin-left: 350px" height="600" width="600">
+            <!--<script type="text/javascript" src="game.pretty.js"></script>-->
+        </div>
+        </div>
+        <div class="column">
+            <div class="lower">
+          <h1 id="right">Tutorial & Keybinds</h1>
+    <p class="centerText">
+        To win make sure that each row,column <br>and 3x3 cell has 1..9 numbers without collisions<br>
+    </p>
+    <p class="centerText" style="color: red;">
+        Left click desired cell and type 1..9 <br>to populate it with a number<br> or alternatively use 0 to delete a number!
+    </p>
+    <div class="buttons">
+        <button onclick="window.location.href='/'">Let's play!</button>
+    </div>
+    </div>
+    </div>
+      </div>
+
+</body>
+</html>

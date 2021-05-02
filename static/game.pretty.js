@@ -64,10 +64,6 @@ function isBoardValidAPICheck() {
         }else if(isValidBoard['isValid'] == true && didnAskedForSolutions == false){
           setMessage("<button class=\"buttonPop\" onclick=\"setBoardMain(50);\">Next Puzzle?</button>   Better luck next time!", msg);
         }else {
-          console.log(isValidBoard['isValid']);
-          console.log(didnAskedForSolutions);
-          console.log(typeof(isValidBoard['isValid']));
-          console.log(typeof(didnAskedForSolutions));
           setMessage("Your solution is not valid! Try again.", msg);
         }
       }

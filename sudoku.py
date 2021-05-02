@@ -53,8 +53,6 @@ def isValidBoard(boardToCheck):
             boardToCheck[row][col] = tmpValue
     return True
                 
-    for a in s:
-        print(a)
 # Finds a starting position for 3x3 row/or col given it's current position
 def setPos(rowOrCol):
     return 3*(rowOrCol // boardSizeCell)
