@@ -2,15 +2,13 @@
     In this project I've decided not to use classes as IE11 doesn't support them as described below:
     https://kangax.github.io/compat-table/es6/
     However later on one of the code optimizations I've added has broken the support for IE11 anyways.. 
-    so now I am left without IE11 support :/
+    so now I am left without IE11 support or classes :/
 */ 
 
 //Default variable names
 gameBoardID = "gameBoard";
 var emptySpaceID = " ";
 var allowedInput = ["1","2","3","4","5","6","7","8","9"];
-var stage = "setup";
-var stage0 = "setup",stage1 = "play", stage2 = "end";
 var boardSize = 9;
 var msg = "messageBox";
 var board,unedtiableBoard,table,messageBox;
@@ -52,7 +50,7 @@ function waitForApiBoard(){
 
 // Check whether board has only valid answers by fetching it to API
 function isBoardValidAPICheck() {
-  stringToSend = encodeBoard(true);
+  stringToSend = encodeBoard(true,unedtiableBoard);
   fetch(serverDomain+'valid?puzzle='+stringToSend)
     .then(response => response.json())
     .then(data => isValidBoard = data)
@@ -76,9 +74,14 @@ function isBoardValidAPICheck() {
 
 // Clear whole board visually and on board 
 function setBoardClear(){
+  stillSolving = false;
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < boardSize; j++) {
         board[i][j] = 0;
+        unedtiableBoard[i][j] = 0;
+        obj = undefined;
+        solvedBoardObj = undefined;
+        
         //drawTextInCell("", i, j, null, null)
         document.getElementsByTagName("tr")[i].getElementsByTagName("td")[j].innerText = emptySpaceID;
         document.getElementsByTagName("tr")[i].getElementsByTagName("td")[j].innerHTML = emptySpaceID;
@@ -185,11 +188,11 @@ function drawTextInCell(value, y, x, oldY, oldX) {
 }
 
   // Encodes the board string into query friendly format.
-  function encodeBoard(stillSolving){
+  function encodeBoard(stillSolving,theBoard){
     if(stillSolving == true){
       tmpBoard = board;
     } else {
-      tmpBoard = unedtiableBoard;
+      tmpBoard = theBoard;
     }
     
     var solutionEncoded = "";
@@ -221,7 +224,7 @@ function drawTextInCell(value, y, x, oldY, oldX) {
     }*/
     
     // 1. encode puzzle
-    stringToSend = encodeBoard(false);
+    stringToSend = encodeBoard(false,unedtiableBoard);
     console.log(stringToSend);
     // 2. send it
     fetch(serverDomain+'solve?puzzle='+stringToSend)
