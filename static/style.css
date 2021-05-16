@@ -30,6 +30,7 @@ body {
 
 table{
     margin-left: 33%;
+    margin-bottom: 20px;
     margin-right: auto;
     margin-top: 1%;
     border-collapse: collapse;
@@ -77,6 +78,7 @@ button{
 #messageBox {
     text-align: center;
     color: #D55B4A;
+    margin-bottom: 15px;
 }
 #theEndMessage {
     text-align: center;
@@ -119,5 +121,5 @@ h1{
     background-color: #2a78ff;
   }
   #messageBox{
-      margin: 0px;
+      padding-bottom: 10px;
   }

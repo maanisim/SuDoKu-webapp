@@ -10,8 +10,107 @@ boardSizeCell = int(config['DEFAULT']['boardSizeCell']) # how long is full row o
 emptyNo = int(config['DEFAULT']['emptyNo'])
 validNumbers = [x for x in range(1,boardSize+1)] #1..9
 
+def selectrandomRowAndCol():
+    return (random.randint(0,8),random.randint(0,8))
+
+# select random [row,column] check if any other number can be fit into where valid number resided
+def guranteeUniquness(a1,difficulty):    
+    for _ in range(difficulty):
+        r,c = (random.randint(0,8),random.randint(0,8))
+        tmpValue = a1[r][c]
+        a1[r][c] = 0
+        for n in validNumbers:
+            if(isValid(a1, n, r, c) == True and n != tmpValue):
+                a1[r][c] = tmpValue
+                
+
+
 def main():
+    BoardsList = []
     board = [[0 for x in range(boardSize)] for y in range(boardSize)]
+    s,a1 = solvePuzzleRandomly(board,0 ,0)
+    #5 easy, #15 medium, #50 hard
+    guranteeUniquness(a1,50)#easy
+    for a in a1:
+        print(a)
+    print("--------------")
+    s,b = solvePuzzle(a1, 0, 0)
+    print(s)
+    for a in b:
+        print(a)
+
+
+    
+    '''
+    BoardsList = []
+    board = [[0 for x in range(boardSize)] for y in range(boardSize)]
+    s,a1 = solvePuzzleRandomly(board,0 ,0)
+    
+    for _ in range(60):
+        r,c = selectrandomRowAndCol()
+        tmpValue = a1[r][c]
+        a1[r][c] = 0
+        for n in validNumbers:
+            if(isValid(a1, n, r, c) == True and n != tmpValue):
+                print("invalid placement")
+    for a in a1:
+        print(a)
+    '''
+
+                        
+
+    '''
+    removeRandomNumbers(board,40)
+    t1 = [[0 for x in range(boardSize)] for y in range(boardSize)]
+
+    for i in range(0,9):
+        for j in range(0,9):
+            t1[i][j] = board[i][j]
+    '''
+    '''
+    t1 = [[0 for x in range(boardSize)] for y in range(boardSize)]
+    t2 = [[0 for x in range(boardSize)] for y in range(boardSize)]
+
+    for i in range(0,9):
+        for j in range(0,9):
+            t1[i][j] = board[i][j]
+            t2[i][j] = board[i][j]
+
+    for a in t1:
+        print(a)
+    print("------")
+    
+    #validity, t2 = solvePuzzle(t2[:], 0, 0)
+    for _ in range(5):
+        t2 = [[0 for x in range(boardSize)] for y in range(boardSize)]
+        validity, t2 = solvePuzzleRandomly(t2[:], 0, 0)
+        if(t2 not in BoardsList):
+            BoardsList.append(t2)
+            print("new array added")
+            break
+        else:
+            print("the same array")
+
+    for a in BoardsList:
+        print("!---!---!--")
+        for b in a:
+            print(b)
+    '''
+    '''
+    for a in t2:
+        print(a)
+    print("------")
+
+    for a in t1:
+        print(a)
+    '''
+    '''
+    for _ in range(999):
+        board = [[0 for x in range(boardSize)] for y in range(boardSize)]
+        setPuzzle(board,0 ,0, True)
+        assert (isValidBoard(board) == True), "setPuzzle generated board that does not follow Sudoku Rules! \n{0}".format(board)
+    '''
+    
     '''
     setPuzzle(board,0 ,0, True)
     #removeRandomNumbers(board,40)
@@ -76,14 +175,33 @@ def isValid(board, num, row, col):
         return False
     return True
 
-# solver is actually part of the same algorithm that generates them
+# solver is actually part of the same algorithm that generates boards
 def solvePuzzle(board,row ,col):
     return setPuzzle(board,row ,col,False), board
+
+def solvePuzzleRandomly(board,row ,col):
+    return setPuzzle(board,row ,col,True), board
+
 
 # shuffle 1..9
 def setShuffleNumbers():
     random.shuffle(validNumbers)
     return (validNumbers[:])
+
+'''
+# removes random numbers from the board
+def removeRandomNumbers(board,howManyNumbers):
+    totalBoardSize =(boardSize*boardSize-1)
+    tmp = [i for i in range(0,totalBoardSize)]
+    #--- https://stackoverflow.com/questions/44883905/randomly-remove-x-elements-from-a-list copied from stack overflow
+    to_delete = set(random.sample(range(len(tmp)),howManyNumbers))
+    newTmp = [x for i,x in enumerate(tmp) if not i in to_delete]
+    # -----------
+    for i in range(0,len(newTmp)):
+        row = (math.trunc(newTmp[i]/9))-1
+        col = (newTmp[i]%9)-1
+        board[row][col] = 0
+'''
 
 # removes random numbers from the board
 def removeRandomNumbers(board,howManyNumbers):
@@ -130,7 +248,7 @@ def setPuzzle(board,row ,col,setNewPuzzle):
         if(isValid(board, num, row, col) == True):
             board[row][col] = num
 
-            # recurse to the next column if vales left
+            # recurse to the next column if values left
             if setPuzzle(board, row, (1+col),setNewPuzzle):
                 return True
         
@@ -138,7 +256,7 @@ def setPuzzle(board,row ,col,setNewPuzzle):
         board[row][col] = emptyNo
     return False
 
-# This is to decode API input
+# This is to decode API recieved input
 def decodeSudoku(encodedSudoku):
     try:
         parts = [encodedSudoku[i:i+boardSize] for i in range(0, len(encodedSudoku), boardSize)]    

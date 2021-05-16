@@ -15,17 +15,14 @@
         </div>
 
     <div class="row">
-        <div class="column">
-
-
-        </div>
+        
         <div class="column">
           <div id="jsGame">
             <h1>SuDoKu</h1>
 
             <table id="gameBoard"></table>
             <br>
-            <div id="messageBox"></div>
+            
             <h1 id="theEndMessageH1"><div id="theEndMessage"></div></h1>
             <script type="text/javascript" src="{{ url_for('static', filename= 'game.pretty.js') }}"></script>
             <!--<script type="text/javascript" src="game.pretty.js"></script>-->
@@ -35,16 +32,23 @@
             <div class="lower">
           <h1 id="right">Buttons</h1>
           <div class="buttons">
-            <button onclick="isBoardValidAPICheck()">Submit</button>
-            <button onclick="setSolveBoard();">Let computer solve it</button>
+            <button onclick="isBoardValidAPICheck();">Submit</button>
+            <button onclick="didnAskedForSolutions=false;setSolveBoard();">Let computer solve it</button>
             <button onclick="setDarkMode();">Dark/Light mode</button>
             <br>
+            <!--
             <button onclick="setBoardMain(60);" style="background-color:rgb(30, 223, 12)">Easy Difficulty</button>
             <button onclick="setBoardMain(50);" style="background-color:rgb(223, 184, 12)">Medium Difficulty</button>
             <button onclick="setBoardMain(40);" style="background-color:rgb(223, 54, 12)">Hard Difficulty</button>
             <br>
-            <button onclick="window.location.href='/tutorial'">How do I play sudoku?</button>
+            -->
+            <button onclick="setBoardMain(5);" style="background-color:rgb(30, 223, 12)">Easy Difficulty</button>
+            <button onclick="setBoardMain(15);" style="background-color:rgb(223, 184, 12)">Medium Difficulty</button>
+            <button onclick="setBoardMain(50);" style="background-color:rgb(223, 54, 12)">Hard Difficulty</button>
+            <br>
 
+            <button onclick="window.location.href='/tutorial'">How do I play sudoku?</button>
+            <div id="messageBox"></div>
             <!-- Yes this way is faster but button doesn't load it if clicked to rapidly.-->
             <!--<button onclick="newBoard();">Next Puzzle</button>-->
 

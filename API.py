@@ -1,6 +1,6 @@
 from flask import Flask,request,render_template
 from flask_restful import Resource, Api
-from sudoku import setPuzzle,decodeSudoku,solvePuzzle,removeRandomNumbers,isValidBoard
+from sudoku import setPuzzle,decodeSudoku,solvePuzzle,removeRandomNumbers,isValidBoard,guranteeUniquness
 import configparser
 import multiprocessing
 import time
@@ -27,8 +27,8 @@ def tutorial():
 Creates a brand new puzzle when GET requested
 
 http://127.0.0.1:5000/new
-http://127.0.0.1:5000/new?keepCells=40
-keepCells declares how many cells are to be kept as the rest will be purged
+http://127.0.0.1:5000/new?removeCells=40
+removeCells declares how many cells are to be kept as the rest will be purged
 '''
 class setAPuzzle(Resource):
     def get(self):
@@ -37,13 +37,20 @@ class setAPuzzle(Resource):
         
         # user input is super evil so we default to a puzzle instead of humouring them :P
         try:
-            keepCells = int(request.args.get('keepCells'))
-            if(keepCells != None and (keepCells > 0) and keepCells < (boardSize*boardSize-1)):
-                removeRandomNumbers(board,keepCells)
+            removeCells = int(request.args.get('removeCells'))
+            if(removeCells != None and (removeCells > 0) and removeCells < (boardSize*boardSize-1)):
+                #removeRandomNumbers(board,removeCells)
+                guranteeUniquness(board,removeCells)
             else:
-                removeRandomNumbers(board,40)
+                #removeRandomNumbers(board,40)
+                guranteeUniquness(board,40)
         except:
-            removeRandomNumbers(board,40)       
+            #   removeRandomNumbers(board,40)  
+            guranteeUniquness(board,40)
+        
+        #if somehow the board managed to be generated invalid (which should never happen but never hurts to be extra careful)
+        while isValidBoard(board):
+            guranteeUniquness(board,40)
         return {'board': board}
 api.add_resource(setAPuzzle, '/new')
 

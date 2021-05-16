@@ -56,17 +56,18 @@ function isBoardValidAPICheck() {
     .then(data => isValidBoard = data)
     .then(() => console.log(isValidBoard))
     function waitForAPIValidCheck(){
-      if(typeof isValidBoard !== "undefined"){
+      if(typeof isValidBoard != "undefined"){
         if(isValidBoard['isValid'] == true && didnAskedForSolutions == true){
           setMessage("You won! Congratulations!", msg);
         }else if(isValidBoard['isValid'] == true && didnAskedForSolutions == false){
-          setMessage("<button class=\"buttonPop\" onclick=\"setBoardMain(50);\">Next Puzzle?</button>   Better luck next time!", msg);
-        }else {
-          setMessage("Your solution is not valid! Try again.", msg);
+          setMessage("<button class=\"buttonPop\" onclick=\"setBoardMain(30);\">Next Puzzle?</button>   Better luck next time!", msg);
+        }else if(isValidBoard['isValid'] == false){
+          setMessage("Your solution is not valid! Try again.<br><br><br>", msg);
         }
+        isValidBoard = undefined;
       }
       else{
-          setTimeout(waitForAPIValidCheck, 250);
+          setTimeout(waitForAPIValidCheck, 150);
       }
     }
     waitForAPIValidCheck()
@@ -74,6 +75,8 @@ function isBoardValidAPICheck() {
 
 // Clear whole board visually and on board 
 function setBoardClear(){
+  isValidBoard = undefined;
+  didnAskedForSolutions = true;
   stillSolving = false;
     for (let i = 0; i < boardSize; i++) {
       for (let j = 0; j < boardSize; j++) {
@@ -98,12 +101,13 @@ function setBoard(difficulty) {
     difficultyString = difficulty;
   }
 
-  // Fetch board with only "keepCells" of numbers
-    fetch(serverDomain+'new?keepCells='+difficultyString.toString())
+  // Fetch board with only "removeCells" of numbers
+    fetch(serverDomain+'new?removeCells='+difficultyString.toString())
     .then(response => response.json())
     .then(data => obj = data)
     .then(() => console.log(obj))
     waitForApiBoard();
+    
 }
 
 // Creates a structure for the gameboard
@@ -211,7 +215,6 @@ function drawTextInCell(value, y, x, oldY, oldX) {
 
 // setSolveBoard() sets the board to solved by asking the API for how to solve it.
   function setSolveBoard(){
-    didnAskedForSolutions = false;
     /*
 
     // Debuging
@@ -227,33 +230,40 @@ function drawTextInCell(value, y, x, oldY, oldX) {
     stringToSend = encodeBoard(false,unedtiableBoard);
     console.log(stringToSend);
     // 2. send it
-    fetch(serverDomain+'solve?puzzle='+stringToSend)
-    .then(response => response.json())
-    .then(data => solvedBoardObj = data)
-    .then(() => console.log(solvedBoardObj))
+      fetch(serverDomain+'solve?puzzle='+stringToSend)
+      .then(response => response.json())
+      .then(data => solvedBoardObj = data)
+      .then(() => console.log(solvedBoardObj))
     
-
-    // Checks whether the api gave the solved data.
-    function isSolvedAPI(){
-      if(typeof solvedBoardObj !== "undefined"){
-        for (let i = 0; i < boardSize; i++) {
-          for (let j = 0; j < boardSize; j++) {
-              board[i][j] = solvedBoardObj['board'][i][j]
-              unedtiableBoard[i][j] = solvedBoardObj['board'][i][j]
-              drawTextInCell(solvedBoardObj['board'][i][j], i, j, null, null);  
-              //setMessage("<button class=\"buttonPop\" onclick=\"location.reload();\">Next Puzzle?</button>", msg);
+        function waitForAPISolveCheck(){
+          if(typeof solvedBoardObj == "undefined"){
+              setTimeout(waitForAPISolveCheck, 550);
           }
-          
+          else{
+            // Checks whether the api gave the solved data.
+            function isSolvedAPI(){
+              if(typeof solvedBoardObj !== "undefined"){
+                for (let i = 0; i < boardSize; i++) {
+                  for (let j = 0; j < boardSize; j++) {
+                      board[i][j] = solvedBoardObj['board'][i][j]
+                      unedtiableBoard[i][j] = solvedBoardObj['board'][i][j]
+                      drawTextInCell(solvedBoardObj['board'][i][j], i, j, null, null);  
+                      //setMessage("<button class=\"buttonPop\" onclick=\"location.reload();\">Next Puzzle?</button>", msg);
+                  }
+                  
+                }
+              }
+              else{
+                  // Try again javascript loads it faster then network provides data
+                  setTimeout(isSolvedAPI, 250);
+              }
+              
+            }
+            // In function since the data takes forever to arrive..
+            isSolvedAPI()
+          }
         }
-      }
-      else{
-          // Try again javascript loads it faster then network provides data
-          setTimeout(isSolvedAPI, 250);
-      }
-      
-    }
-    // In function since the data takes forever to arrive..
-    isSolvedAPI()
+        waitForAPISolveCheck()
   }
 /*
   Set dark/white mode UI
