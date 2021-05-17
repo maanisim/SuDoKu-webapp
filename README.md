@@ -45,7 +45,7 @@ http://127.0.0.1:5000/solve?puzzle=....8.9716.34.7852798..134643....5....71..43.
 To check whether puzzle was correctly solved
 http://127.0.0.1:5000/valid?puzzle=254683971613497852798251346431768529967125438582349617329516784845972163176834295
 
-To generate a board with (removeCells-1) cells on the board
+To generate a board with upto removeCells worth of cells removed from the board
 http://127.0.0.1:5000/new?removeCells=40
 
 ```
